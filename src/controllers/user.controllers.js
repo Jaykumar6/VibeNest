@@ -28,8 +28,8 @@ const registerUser = asyncHandler(async (req, res) => {
       "User with the same email or username already exists"
     );
   }
-    const avatarLocalPath = req.files?.avathar[0]?.path
-    const coverImageLocalPath = req.files?.coverImage[0]?.path
+    const avatarLocalPath = req.files?.avatar?.[0]?.path
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.path
 
     if(!avatarLocalPath){
       throw new ApiError(400,"Avatar Image is required")
