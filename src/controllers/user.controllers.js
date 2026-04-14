@@ -4,6 +4,19 @@ import {User} from "../models/User.model.js"
 import {uploadToCloudinary} from "../utils/cloudnary.js"
 import {ApiResponse} from "../utils/Apiresponse.js"
 
+const generateAccessAndRefershTokens = async (userId)=>{
+  try{
+   const user = await User.findById(userId)
+   const accessToken = user.generateAccessToken()
+    const refreshToken = user.generateRefreshToken()
+    user.refreshToken = refreshToken
+    await user.save({validateBeforeSave:false})
+    return {accessToken,refreshToken}
+   }catch(error){
+    throw new ApiError(500,"Failed to generate tokens")
+  }
+}
+
 
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password, fullName } = req.body
@@ -59,6 +72,39 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 
+const loginUser = asyncHandler(async(req,res)=>{
+  const {email,username,password} = req.body
+  if(!email || !username){
+    throw new ApiError(400,"Email or username is required")
+  }
 
+  const user = await User.findOne({$or:[{email},{username}]}) 
+  if(!user){
+    throw new ApiError (404,"User not found please Register")
+  }
+  const isPasswordValid = await user.isPasswordCorrect(password)
+  if(!isPasswordValid){
+    throw new ApiError(401,"Invalid Password")
+  }
+  const {accessToken,refershToken} = await generateAccessAndRefershTokens(user._id)
 
-export {registerUser}
+  const loggedInUser = await User.findById(user._id).select("-password -refershToken")
+
+  //cookies
+  const option = {
+    httpOnly:true,
+    secure:true
+  }
+  return res.status(200).cookie('accessToken',accessToken,option).cookie('refershToken',refershToken,option).json(new ApiResponse(200,{user:loggedInUser,accessToken,refershToken},"User logged in successfully"))
+})
+
+const logoutUser = asyncHandler(async(req,res)=>{
+  await User.findByIdAndUpdate(req.user._id,{$set:{refreshToken:"undefined"}},{new:true})
+  const option = {
+    httpOnly:true,
+    secure:true
+  }
+  return res.status(200).clearcookie('accessToken',option).clearcookie('refershToken',option).json(new ApiResponse(200,{},"User logged out successfully"))
+})
+
+export {registerUser,loginUser,logoutUser}
