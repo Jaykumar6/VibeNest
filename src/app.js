@@ -20,7 +20,7 @@ import likeRouter from './routes/like.routers.js'
 import playlistRouter from './routes/playlist.router.js'
 import subscriptionRouter from './routes/subscription.routrs.js'
 import tweetRouter from './routes/tweet.routers.js'
-import videoRouter from './routes/vedio.routers.js'
+import videoRouter from './routes/video.routers.js'
 
 
 

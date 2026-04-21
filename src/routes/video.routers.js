@@ -7,6 +7,6 @@ router.route('/').get(getAllVideos)
 router.route('/publish').post(publishAVideo)
 router.route('/getVideoById/:videoId').get(getVideoById)
 router.route('/:videoId').get(getVideoById).put(updateVideo).delete(deleteVideo)
-router.route('/togglePublish/:videoId').put(togglePublishStatus)    
+router.route('/togglePublish/:videoId').put(togglePublishStatus)
 
 export default router

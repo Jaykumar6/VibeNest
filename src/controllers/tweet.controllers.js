@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId } from "mongooes";
+import mongoose, { isValidObjectId } from "mongoose";
 import Tweet from "../models/tweet.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/Apiresponse.js";

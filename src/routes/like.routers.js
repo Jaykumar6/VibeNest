@@ -1,13 +1,13 @@
 import {Router} from "express"
-import {toggleLikevedio,commentlike,tweetLike,getLikedVideos} from "../controllers/like.controllers.js"
+import {toggleLikeVideo,commentLike,tweetLike,getLikedVideos} from "../controllers/like.controllers.js"
 import router from "./user.routes.js"
 
 
-const router = Router()
+const routers = Router()
 
-router.route("/videos/:videoId").post(toggleLikevedio)
-router.route("/comments/:commentId").post(commentlike)
-router.route("/tweets/:tweetId").post(tweetLike)
-router.route("/videos").get(getLikedVideos)
+routers.route("/videos/:videoId").post(toggleLikeVideo)
+routers.route("/comments/:commentId").post(commentLike)
+routers.route("/tweets/:tweetId").post(tweetLike)
+routers.route("/videos").get(getLikedVideos)
 
 export default router

@@ -1,6 +1,8 @@
 import mongoose, {isValidObjectId} from 'mongoose'
 import user from '../models/user.model.js'
-import Subscription from '../models/subscription.model.js'
+import Subscription from '../models/subscription.js'
+import { Video } from '../models/video.model.js'
+import { Like } from '../models/like.model.js'
 import {ApiError} from '../utils/apiError.js'
 import { ApiResponse } from '../utils/Apiresponse.js'
 import { asyncHandler } from '../utils/asynchandler.js'
@@ -8,7 +10,7 @@ import { asyncHandler } from '../utils/asynchandler.js'
 const getChannelStats = asyncHandler(async(req,res)=>{
     const channelId = req.user._id
 
-    const totalSubscriber = await Subscription.countDocuments({channel:channelId})
+    const totalSubscribers = await Subscription.countDocuments({channel:channelId})
     const videoStats = await Video.aggregate([
         {$match:{
             owner: new mongoose.Types.ObjectId(channelId)
